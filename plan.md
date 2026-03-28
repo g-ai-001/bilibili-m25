@@ -55,10 +55,10 @@
 - [x] 记住上次播放倍速设置
 - [x] 播放控制界面优化
 
-### 0.3.1 版本 - 重构优化 (开发中)
-- [ ] 提取 PlayQueueDialog 为独立组件文件
-- [ ] 提取 PlaybackSpeedDialog 为独立组件文件
-- [ ] 精简 VideoPlayerScreen 代码结构
+### 0.3.1 版本 - 重构优化
+- [x] 提取 PlayQueueDialog 为独立组件文件
+- [x] 提取 PlaybackSpeedDialog 为独立组件文件
+- [x] 精简 VideoPlayerScreen 代码结构
 
 ### 中期规划 (0.2.x - 0.3.x)
 
@@ -131,7 +131,7 @@
 
 ## 版本历史
 
-- **0.3.1** (开发中): 重构优化
+- **0.3.1** (已完成): 重构优化
   - 提取 PlayQueueDialog 为独立组件文件
   - 提取 PlaybackSpeedDialog 为独立组件文件
   - 精简 VideoPlayerScreen 代码结构
