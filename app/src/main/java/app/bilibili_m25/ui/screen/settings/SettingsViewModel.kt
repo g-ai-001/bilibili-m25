@@ -1,6 +1,5 @@
 package app.bilibili_m25.ui.screen.settings
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.data.local.ThemeMode
@@ -24,17 +23,17 @@ class SettingsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
-    fun loadThemeMode(context: Context) {
+    fun loadThemeMode() {
         viewModelScope.launch {
-            themePreferences.getThemeMode(context).collect { mode ->
+            themePreferences.getThemeMode().collect { mode ->
                 _uiState.update { it.copy(themeMode = mode) }
             }
         }
     }
 
-    fun setThemeMode(context: Context, mode: ThemeMode) {
+    fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch {
-            themePreferences.setThemeMode(context, mode)
+            themePreferences.setThemeMode(mode)
             _uiState.update { it.copy(themeMode = mode) }
         }
     }

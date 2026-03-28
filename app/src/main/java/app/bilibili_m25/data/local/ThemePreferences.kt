@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,11 +19,13 @@ enum class ThemeMode {
 }
 
 @Singleton
-class ThemePreferences @Inject constructor() {
+class ThemePreferences @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     private val THEME_MODE_KEY = stringPreferencesKey("theme_mode")
 
-    fun getThemeMode(context: Context): Flow<ThemeMode> {
+    fun getThemeMode(): Flow<ThemeMode> {
         return context.themeDataStore.data.map { preferences ->
             when (preferences[THEME_MODE_KEY]) {
                 "light" -> ThemeMode.LIGHT
@@ -32,7 +35,7 @@ class ThemePreferences @Inject constructor() {
         }
     }
 
-    suspend fun setThemeMode(context: Context, mode: ThemeMode) {
+    suspend fun setThemeMode(mode: ThemeMode) {
         context.themeDataStore.edit { preferences ->
             preferences[THEME_MODE_KEY] = when (mode) {
                 ThemeMode.LIGHT -> "light"

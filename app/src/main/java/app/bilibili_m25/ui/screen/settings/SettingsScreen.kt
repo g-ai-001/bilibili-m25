@@ -27,7 +27,7 @@ fun SettingsScreen(
     LaunchedEffect(Unit) {
         viewModel.logger.init(context)
         logDirPath = viewModel.logger.getLogDir()?.absolutePath ?: "未初始化"
-        viewModel.loadThemeMode(context)
+        viewModel.loadThemeMode()
     }
 
     Scaffold(
@@ -171,7 +171,7 @@ fun SettingsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    viewModel.setThemeMode(context, mode)
+                                    viewModel.setThemeMode(mode)
                                     showThemeDialog = false
                                 }
                                 .padding(vertical = 12.dp),
@@ -180,7 +180,7 @@ fun SettingsScreen(
                             RadioButton(
                                 selected = uiState.themeMode == mode,
                                 onClick = {
-                                    viewModel.setThemeMode(context, mode)
+                                    viewModel.setThemeMode(mode)
                                     showThemeDialog = false
                                 }
                             )

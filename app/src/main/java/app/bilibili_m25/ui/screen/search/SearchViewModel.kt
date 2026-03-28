@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.usecase.SearchVideosUseCase
 import app.bilibili_m25.domain.usecase.ToggleFavoriteUseCase
+import app.bilibili_m25.util.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -22,7 +23,8 @@ data class SearchUiState(
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchVideosUseCase: SearchVideosUseCase,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val logger: Logger
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -46,6 +48,7 @@ class SearchViewModel @Inject constructor(
 
             searchVideosUseCase(query)
                 .catch { e ->
+                    logger.e("SearchViewModel", "搜索失败", e)
                     _uiState.update {
                         it.copy(
                             results = emptyList(),

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import app.bilibili_m25.data.local.BilibiliDatabase
 import app.bilibili_m25.data.local.dao.VideoDao
+import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.repository.VideoRepositoryImpl
 import app.bilibili_m25.domain.repository.VideoRepository
 import app.bilibili_m25.util.Logger
@@ -46,7 +47,7 @@ object AppModule {
     @Singleton
     fun provideVideoRepository(
         videoDao: VideoDao,
-        videoLocalDataSource: app.bilibili_m25.data.local.datasource.VideoLocalDataSource,
+        videoLocalDataSource: VideoLocalDataSource,
         logger: Logger
     ): VideoRepository {
         return VideoRepositoryImpl(videoDao, videoLocalDataSource, logger)

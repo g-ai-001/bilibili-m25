@@ -56,35 +56,29 @@ class VideoPlayerViewModel @Inject constructor(
     fun loadVideo(videoId: Long) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            try {
-                val video = videoRepository.getVideoById(videoId)
-                if (video != null) {
-                    incrementPlayCountUseCase(videoId)
-                    _uiState.update { it.copy(video = video, isLoading = false) }
-                } else {
-                    _uiState.update { it.copy(error = "视频不存在", isLoading = false) }
-                }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(error = e.message, isLoading = false) }
-            }
+            loadVideoInternal(videoId)
         }
     }
 
     fun loadVideoWithQueue(videoId: Long, videos: List<Video>, startIndex: Int) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
-            try {
-                playQueueManager.setQueue(videos, startIndex)
-                val video = videoRepository.getVideoById(videoId)
-                if (video != null) {
-                    incrementPlayCountUseCase(videoId)
-                    _uiState.update { it.copy(video = video, isLoading = false) }
-                } else {
-                    _uiState.update { it.copy(error = "视频不存在", isLoading = false) }
-                }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(error = e.message, isLoading = false) }
+            playQueueManager.setQueue(videos, startIndex)
+            loadVideoInternal(videoId)
+        }
+    }
+
+    private suspend fun loadVideoInternal(videoId: Long) {
+        try {
+            val video = videoRepository.getVideoById(videoId)
+            if (video != null) {
+                incrementPlayCountUseCase(videoId)
+                _uiState.update { it.copy(video = video, isLoading = false) }
+            } else {
+                _uiState.update { it.copy(error = "视频不存在", isLoading = false) }
             }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(error = e.message, isLoading = false) }
         }
     }
 
