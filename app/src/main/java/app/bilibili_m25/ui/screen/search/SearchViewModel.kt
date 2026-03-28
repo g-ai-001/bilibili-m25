@@ -3,6 +3,7 @@ package app.bilibili_m25.ui.screen.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.domain.model.Video
+import app.bilibili_m25.domain.usecase.DeleteVideoUseCase
 import app.bilibili_m25.domain.usecase.SearchVideosUseCase
 import app.bilibili_m25.domain.usecase.ToggleFavoriteUseCase
 import app.bilibili_m25.util.Logger
@@ -24,6 +25,7 @@ data class SearchUiState(
 class SearchViewModel @Inject constructor(
     private val searchVideosUseCase: SearchVideosUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
     private val logger: Logger
 ) : ViewModel() {
 
@@ -72,6 +74,12 @@ class SearchViewModel @Inject constructor(
     fun toggleFavorite(videoId: Long) {
         viewModelScope.launch {
             toggleFavoriteUseCase(videoId)
+        }
+    }
+
+    fun deleteVideo(video: Video) {
+        viewModelScope.launch {
+            deleteVideoUseCase(video)
         }
     }
 }

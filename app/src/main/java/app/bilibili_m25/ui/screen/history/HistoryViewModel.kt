@@ -3,6 +3,7 @@ package app.bilibili_m25.ui.screen.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.domain.model.Video
+import app.bilibili_m25.domain.usecase.DeleteVideoUseCase
 import app.bilibili_m25.domain.usecase.GetHistoryVideosUseCase
 import app.bilibili_m25.domain.usecase.ToggleFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ data class HistoryUiState(
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getHistoryVideosUseCase: GetHistoryVideosUseCase,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val deleteVideoUseCase: DeleteVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HistoryUiState())
@@ -47,6 +49,16 @@ class HistoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 toggleFavoriteUseCase(videoId)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message) }
+            }
+        }
+    }
+
+    fun deleteVideo(video: Video) {
+        viewModelScope.launch {
+            try {
+                deleteVideoUseCase(video)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message) }
             }

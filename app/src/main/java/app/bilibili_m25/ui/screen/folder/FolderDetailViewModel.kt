@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
+import app.bilibili_m25.domain.usecase.DeleteVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,7 @@ data class FolderDetailUiState(
 @HiltViewModel
 class FolderDetailViewModel @Inject constructor(
     private val videoRepository: VideoRepository,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -57,6 +59,17 @@ class FolderDetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 videoRepository.toggleFavorite(videoId)
+                loadVideos()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message) }
+            }
+        }
+    }
+
+    fun deleteVideo(video: Video) {
+        viewModelScope.launch {
+            try {
+                deleteVideoUseCase(video)
                 loadVideos()
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message) }

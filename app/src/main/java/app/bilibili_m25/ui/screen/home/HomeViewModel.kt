@@ -6,6 +6,7 @@ import app.bilibili_m25.data.local.SortPreferences
 import app.bilibili_m25.data.local.VideoSortOrder
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
+import app.bilibili_m25.domain.usecase.DeleteVideoUseCase
 import app.bilibili_m25.domain.usecase.GetAllVideosUseCase
 import app.bilibili_m25.domain.usecase.GetFavoriteVideosUseCase
 import app.bilibili_m25.domain.usecase.ScanVideosUseCase
@@ -31,6 +32,7 @@ class HomeViewModel @Inject constructor(
     private val getFavoriteVideosUseCase: GetFavoriteVideosUseCase,
     private val scanVideosUseCase: ScanVideosUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
     private val sortPreferences: SortPreferences,
     private val videoRepository: VideoRepository
 ) : ViewModel() {
@@ -90,6 +92,16 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 toggleFavoriteUseCase(videoId)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message) }
+            }
+        }
+    }
+
+    fun deleteVideo(video: Video) {
+        viewModelScope.launch {
+            try {
+                deleteVideoUseCase(video)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message) }
             }

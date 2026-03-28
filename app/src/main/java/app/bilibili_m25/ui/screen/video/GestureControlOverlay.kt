@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Screenshot
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +32,8 @@ enum class GestureType {
 @Composable
 fun GestureControlOverlay(
     exoPlayer: ExoPlayer,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onScreenshotClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -200,21 +202,32 @@ fun GestureControlOverlay(
                         fontSize = 12.sp
                     )
 
-                    // 播放/暂停按钮
-                    IconButton(
-                        onClick = {
-                            if (exoPlayer.isPlaying) {
-                                exoPlayer.pause()
-                            } else {
-                                exoPlayer.play()
-                            }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // 截图按钮
+                        IconButton(onClick = onScreenshotClick) {
+                            Icon(
+                                imageVector = Icons.Default.Screenshot,
+                                contentDescription = "截图",
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (isPlaying) "暂停" else "播放",
-                            tint = Color.White
-                        )
+
+                        // 播放/暂停按钮
+                        IconButton(
+                            onClick = {
+                                if (exoPlayer.isPlaying) {
+                                    exoPlayer.pause()
+                                } else {
+                                    exoPlayer.play()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                                contentDescription = if (isPlaying) "暂停" else "播放",
+                                tint = Color.White
+                            )
+                        }
                     }
                 }
             }

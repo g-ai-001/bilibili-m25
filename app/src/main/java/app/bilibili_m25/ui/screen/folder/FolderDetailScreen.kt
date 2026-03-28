@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.bilibili_m25.ui.component.SwipeableVideoCard
 import app.bilibili_m25.ui.component.VideoCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,10 +91,11 @@ fun FolderDetailScreen(
                             items = uiState.videos,
                             key = { it.id }
                         ) { video ->
-                            VideoCard(
+                            SwipeableVideoCard(
                                 video = video,
                                 onClick = { onVideoClick(video.id) },
-                                onFavoriteClick = { viewModel.toggleFavorite(video.id) }
+                                onFavoriteClick = { viewModel.toggleFavorite(video.id) },
+                                onDeleteClick = { viewModel.deleteVideo(video) }
                             )
                         }
                     }

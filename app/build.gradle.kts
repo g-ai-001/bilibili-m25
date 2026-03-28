@@ -13,8 +13,8 @@ android {
         applicationId = "app.bilibili_m25"
         minSdk = 36
         targetSdk = 36
-        versionCode = 12
-        versionName = "0.5.2"
+        versionCode = 13
+        versionName = "0.7.0"
 
         vectorDrawables {
             useSupportLibrary = true

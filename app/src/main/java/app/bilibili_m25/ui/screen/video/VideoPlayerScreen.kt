@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Rational
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Queue
+import androidx.compose.material.icons.filled.Screenshot
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -52,6 +54,7 @@ fun VideoPlayerScreen(
     var showSpeedSelector by remember { mutableStateOf(false) }
     var showResumeDialog by remember { mutableStateOf(false) }
     var pendingSeekPosition by remember { mutableStateOf(0L) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val isInPipMode = remember { mutableStateOf(false) }
 
@@ -98,6 +101,20 @@ fun VideoPlayerScreen(
 
     LaunchedEffect(uiState.playbackSpeed) {
         exoPlayer?.setPlaybackSpeed(uiState.playbackSpeed)
+    }
+
+    LaunchedEffect(uiState.screenshotUri) {
+        uiState.screenshotUri?.let { uri ->
+            snackbarHostState.showSnackbar("截图已保存到相册")
+            viewModel.clearScreenshotState()
+        }
+    }
+
+    LaunchedEffect(uiState.screenshotError) {
+        uiState.screenshotError?.let { error ->
+            snackbarHostState.showSnackbar("截图失败: $error")
+            viewModel.clearScreenshotState()
+        }
     }
 
     DisposableEffect(Unit) {
@@ -188,7 +205,8 @@ fun VideoPlayerScreen(
                         actionIconContentColor = Color.White
                     )
                 )
-            }
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             Box(
                 modifier = Modifier
@@ -218,7 +236,12 @@ fun VideoPlayerScreen(
                             )
                             GestureControlOverlay(
                                 exoPlayer = exoPlayer!!,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.fillMaxSize(),
+                                onScreenshotClick = {
+                                    exoPlayer?.let { player ->
+                                        viewModel.takeScreenshot(context, player)
+                                    }
+                                }
                             )
                         }
                     }

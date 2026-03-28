@@ -1,5 +1,7 @@
 package app.bilibili_m25.ui.screen.video
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.bilibili_m25.data.local.PlaybackSpeedPreferences
@@ -8,6 +10,7 @@ import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
 import app.bilibili_m25.domain.usecase.IncrementPlayCountUseCase
 import app.bilibili_m25.domain.usecase.UpdatePlayPositionUseCase
+import app.bilibili_m25.util.ScreenshotHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -21,7 +24,9 @@ data class VideoPlayerUiState(
     val currentIndex: Int = -1,
     val hasNext: Boolean = false,
     val hasPrevious: Boolean = false,
-    val playbackSpeed: Float = 1.0f
+    val playbackSpeed: Float = 1.0f,
+    val screenshotUri: Uri? = null,
+    val screenshotError: String? = null
 )
 
 @HiltViewModel
@@ -30,7 +35,8 @@ class VideoPlayerViewModel @Inject constructor(
     private val updatePlayPositionUseCase: UpdatePlayPositionUseCase,
     private val incrementPlayCountUseCase: IncrementPlayCountUseCase,
     private val playQueueManager: PlayQueueManager,
-    private val playbackSpeedPreferences: PlaybackSpeedPreferences
+    private val playbackSpeedPreferences: PlaybackSpeedPreferences,
+    private val screenshotHelper: ScreenshotHelper
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerUiState())
@@ -133,5 +139,22 @@ class VideoPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             playbackSpeedPreferences.setPlaybackSpeed(speed)
         }
+    }
+
+    fun takeScreenshot(context: Context, exoPlayer: ExoPlayer) {
+        val video = _uiState.value.video ?: return
+        viewModelScope.launch {
+            _uiState.update { it.copy(screenshotUri = null, screenshotError = null) }
+            val result = screenshotHelper.takeScreenshot(context, exoPlayer, video.title)
+            result.onSuccess { uri ->
+                _uiState.update { it.copy(screenshotUri = uri) }
+            }.onFailure { error ->
+                _uiState.update { it.copy(screenshotError = error.message) }
+            }
+        }
+    }
+
+    fun clearScreenshotState() {
+        _uiState.update { it.copy(screenshotUri = null, screenshotError = null) }
     }
 }
