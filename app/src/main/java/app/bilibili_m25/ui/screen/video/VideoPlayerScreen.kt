@@ -211,10 +211,16 @@ fun VideoPlayerScreen(
                         )
                     }
                     exoPlayer != null -> {
-                        VideoPlayerView(
-                            exoPlayer = exoPlayer!!,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            VideoPlayerView(
+                                exoPlayer = exoPlayer!!,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            GestureControlOverlay(
+                                exoPlayer = exoPlayer!!,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 }
             }
@@ -282,7 +288,7 @@ private fun VideoPlayerView(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                useController = true
+                useController = false
                 setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING)
             }
         },
