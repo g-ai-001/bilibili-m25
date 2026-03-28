@@ -98,7 +98,6 @@ dependencies {
     implementation(libs.material3.window.size)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
-    implementation(libs.guava)
 
     debugImplementation(libs.androidx.ui.tooling)
 }
