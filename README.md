@@ -27,8 +27,11 @@
 
 ## 版本历史
 
-### 0.1.3 (当前版本)
-- 修复 Kotlin 编译错误（BilibiliApp 命名冲突、catch 参数类型缺失）
+### 0.1.4 (当前版本)
+- 恢复 gradle-wrapper.jar 修复 CI 构建失败
+
+### 0.1.3 - 0.1.2 - 0.1.1
+- 修复 Kotlin 编译错误
 - 修复 gradle-wrapper.jar 缺失问题
 - 修复 gradlew 执行权限问题
 
