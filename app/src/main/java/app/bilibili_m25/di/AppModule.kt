@@ -3,6 +3,7 @@ package app.bilibili_m25.di
 import android.content.Context
 import androidx.room.Room
 import app.bilibili_m25.data.local.BilibiliDatabase
+import app.bilibili_m25.data.local.PlaybackSpeedPreferences
 import app.bilibili_m25.data.local.dao.VideoDao
 import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.repository.VideoRepositoryImpl
@@ -22,6 +23,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLogger(): Logger = Logger()
+
+    @Provides
+    @Singleton
+    fun providePlaybackSpeedPreferences(
+        @ApplicationContext context: Context
+    ): PlaybackSpeedPreferences {
+        return PlaybackSpeedPreferences(context)
+    }
 
     @Provides
     @Singleton
