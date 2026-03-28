@@ -68,11 +68,12 @@
 
 ## 已完成版本
 
-### 0.1.5 (开发中)
+### 0.1.5
 - 移除 HomeViewModel 中无用的 onSearchClick 方法
-- 优化 VideoPlayerScreen 中 ExoPlayer 生命周期管理
-- 精简重复代码，提升可维护性
-- 清理未使用的导入语句
+- 为 SettingsScreen 创建 ViewModel 改用 Hilt 注入
+- 修复 SettingsScreen 版本号硬编码问题，使用 BuildConfig 动态获取
+- 修复 SearchViewModel 中空 catch 块的处理
+- 移除 VideoCard 中未使用的 coil3 导入
 
 ### 0.1.4
 - 恢复 gradle-wrapper.jar 修复 CI 构建失败
@@ -105,7 +106,7 @@
 
 ## 版本历史
 
-- **0.1.5** (开发中): 重构优化代码
+- **0.1.5** (已完成): 重构优化代码质量和可维护性
 - **0.1.4** (已完成): 恢复 gradle-wrapper.jar 修复 CI 构建失败
 - **0.1.3** (已完成): 修复 Kotlin 编译错误
 - **0.1.2** (已完成): 修复 gradle-wrapper.jar 缺失问题
