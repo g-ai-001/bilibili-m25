@@ -29,7 +29,14 @@
 
 ## 版本历史
 
-### 0.2.0 (当前版本)
+### 0.2.1 (当前版本)
+- 重构 VideoPlayerViewModel 消除重复代码
+- 重构 ThemePreferences 和 SettingsViewModel 通过 Hilt 注入 ApplicationContext
+- 修复 AppModule 代码风格问题
+- 修复 HomeScreen 未使用导入
+- 修复 SearchViewModel 错误处理和 MainActivity 方法调用错误
+
+### 0.2.0
 - 新增播放队列功能，支持添加到队列、查看队列、上一首/下一首
 - 视频播放完毕自动播放队列中的下一个视频
 - 新增主题切换功能（浅色/深色/跟随系统）
@@ -49,15 +56,10 @@
 - 使用Hilt注入优化SettingsScreen
 - 动态获取版本号
 
-### 0.1.4 - 0.1.1
-- 修复 gradle-wrapper.jar 缺失问题
-- 修复 gradlew 执行权限问题
-- 修复 Kotlin 编译错误
-
-### 0.1.0
+### 0.1.4 - 0.1.0
+- 修复 gradle-wrapper.jar 缺失、执行权限、Kotlin 编译等问题
 - 初始化基础框架
-- 实现视频扫描和本地存储功能
-- 实现视频播放功能
+- 实现视频扫描、本地存储、视频播放功能
 - 实现首页、搜索、收藏、设置界面
 - 配置GitHub Actions CI/CD
 

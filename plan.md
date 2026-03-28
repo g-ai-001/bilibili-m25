@@ -121,13 +121,14 @@
 
 ## 版本历史
 
-- **0.2.1** (开发中): 重构优化
+- **0.2.1** (已完成): 重构优化
   - 重构 VideoPlayerViewModel 消除 loadVideo 和 loadVideoWithQueue 方法的重复代码
   - 重构 ThemePreferences 通过 Hilt 注入 ApplicationContext，移除 Context 参数
   - 重构 SettingsViewModel 移除 Context 参数
   - 修复 AppModule 代码风格不一致问题
   - 修复 HomeScreen 未使用的 @Inject 导入
   - 修复 SearchViewModel catch 块未记录错误问题
+  - 修复 MainActivity 中 getThemeMode 调用参数错误
 - **0.2.0** (已完成): 播放队列与主题切换
   - 新增播放队列管理器(PlayQueueManager)支持播放队列管理
   - 新增主题偏好管理器(ThemePreferences)支持浅色/深色/跟随系统主题切换
