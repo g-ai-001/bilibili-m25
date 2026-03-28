@@ -45,7 +45,15 @@ class SearchViewModel @Inject constructor(
             _uiState.update { it.copy(isSearching = true) }
 
             searchVideosUseCase(query)
-                .catch { }
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            results = emptyList(),
+                            isSearching = false,
+                            hasSearched = true
+                        )
+                    }
+                }
                 .collect { videos ->
                     _uiState.update {
                         it.copy(

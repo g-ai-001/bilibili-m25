@@ -18,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.bilibili_m25.domain.model.Video
-import coil3.compose.AsyncImage
 
 @Composable
 fun VideoCard(

@@ -8,15 +8,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import app.bilibili_m25.util.Logger
+import androidx.hilt.navigation.compose.hiltViewModel
+import app.bilibili_m25.BuildConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    logger: Logger = Logger()
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    var logDirPath by remember { mutableStateOf(logger.getLogDir()?.absolutePath ?: "未初始化") }
+    val context = LocalContext.current
+    var logDirPath by remember { mutableStateOf(viewModel.logger.getLogDir()?.absolutePath ?: "未初始化") }
+
+    LaunchedEffect(Unit) {
+        viewModel.logger.init(context)
+        logDirPath = viewModel.logger.getLogDir()?.absolutePath ?: "未初始化"
+    }
 
     Scaffold(
         topBar = {
@@ -92,7 +100,7 @@ fun SettingsScreen(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "版本: 0.1.0",
+                        text = "版本: ${BuildConfig.VERSION_NAME}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

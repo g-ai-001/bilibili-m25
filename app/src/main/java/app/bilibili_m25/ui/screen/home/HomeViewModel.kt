@@ -77,6 +77,4 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-    fun onSearchClick() {}
 }
