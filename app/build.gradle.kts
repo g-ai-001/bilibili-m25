@@ -13,8 +13,8 @@ android {
         applicationId = "app.bilibili_m25"
         minSdk = 36
         targetSdk = 36
-        versionCode = 13
-        versionName = "0.7.0"
+        versionCode = 14
+        versionName = "0.8.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.material3.window.size)
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
+    implementation(libs.guava)
 
     debugImplementation(libs.androidx.ui.tooling)
 }

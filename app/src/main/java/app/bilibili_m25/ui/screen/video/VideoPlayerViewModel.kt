@@ -11,6 +11,7 @@ import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
 import app.bilibili_m25.domain.usecase.IncrementPlayCountUseCase
 import app.bilibili_m25.domain.usecase.UpdatePlayPositionUseCase
+import app.bilibili_m25.service.PlaybackManager
 import app.bilibili_m25.util.ScreenshotHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -37,7 +38,8 @@ class VideoPlayerViewModel @Inject constructor(
     private val incrementPlayCountUseCase: IncrementPlayCountUseCase,
     private val playQueueManager: PlayQueueManager,
     private val playbackSpeedPreferences: PlaybackSpeedPreferences,
-    private val screenshotHelper: ScreenshotHelper
+    private val screenshotHelper: ScreenshotHelper,
+    private val playbackManager: PlaybackManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerUiState())
@@ -157,5 +159,10 @@ class VideoPlayerViewModel @Inject constructor(
 
     fun clearScreenshotState() {
         _uiState.update { it.copy(screenshotUri = null, screenshotError = null) }
+    }
+
+    fun playInBackground() {
+        val video = _uiState.value.video ?: return
+        playbackManager.playVideo(video.uri, video.title)
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Queue
@@ -196,6 +197,12 @@ fun VideoPlayerScreen(
                             uiState.video?.let { viewModel.addToQueue(it) }
                         }) {
                             Icon(Icons.Default.Add, contentDescription = "添加到队列")
+                        }
+                        IconButton(onClick = {
+                            viewModel.playInBackground()
+                            Toast.makeText(context, "已在后台播放", Toast.LENGTH_SHORT).show()
+                        }) {
+                            Icon(Icons.Default.Headphones, contentDescription = "后台播放")
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
