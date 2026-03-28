@@ -17,6 +17,9 @@ import app.bilibili_m25.ui.screen.video.VideoPlayerScreen
 import app.bilibili_m25.ui.screen.search.SearchScreen
 import app.bilibili_m25.ui.screen.settings.SettingsScreen
 import app.bilibili_m25.ui.screen.history.HistoryScreen
+import app.bilibili_m25.ui.screen.folder.FolderScreen
+import app.bilibili_m25.ui.screen.folder.FolderDetailScreen
+import app.bilibili_m25.ui.screen.detail.VideoDetailScreen
 
 @Composable
 fun BilibiliNavHost(
@@ -35,16 +38,16 @@ fun BilibiliNavHost(
         composable(Screen.Home.route) {
             HomeScreen(
                 onVideoClick = { videoId ->
-                    val videos = playQueue.ifEmpty { emptyList() }
-                    val index = videos.indexOfFirst { it.id == videoId }
-                    if (videos.isEmpty() || index == -1) {
-                        navController.navigate(Screen.VideoPlayer.createRoute(videoId))
-                    } else {
-                        navController.navigate(Screen.VideoPlayer.createRoute(videoId))
-                    }
+                    navController.navigate(Screen.VideoPlayer.createRoute(videoId))
                 },
                 onSearchClick = {
                     navController.navigate(Screen.Search.route)
+                },
+                onFolderClick = { folderPath ->
+                    navController.navigate(Screen.FolderDetail.createRoute(folderPath))
+                },
+                onFoldersClick = {
+                    navController.navigate(Screen.Folder.route)
                 }
             )
         }
@@ -84,6 +87,54 @@ fun BilibiliNavHost(
             SettingsScreen()
         }
 
+        composable(Screen.Folder.route) {
+            FolderScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onFolderClick = { folderPath ->
+                    navController.navigate(Screen.FolderDetail.createRoute(folderPath))
+                }
+            )
+        }
+
+        composable(
+            route = Screen.FolderDetail.route,
+            arguments = listOf(
+                navArgument("folderPath") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val folderPath = backStackEntry.arguments?.getString("folderPath") ?: ""
+            val decodedPath = java.net.URLDecoder.decode(folderPath, "UTF-8")
+            FolderDetailScreen(
+                folderPath = decodedPath,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onVideoClick = { videoId ->
+                    navController.navigate(Screen.VideoPlayer.createRoute(videoId))
+                }
+            )
+        }
+
+        composable(
+            route = Screen.VideoDetail.route,
+            arguments = listOf(
+                navArgument("videoId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val videoId = backStackEntry.arguments?.getLong("videoId") ?: 0L
+            VideoDetailScreen(
+                videoId = videoId,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onPlayClick = { id ->
+                    navController.navigate(Screen.VideoPlayer.createRoute(id))
+                }
+            )
+        }
+
         composable(
             route = Screen.VideoPlayer.route,
             arguments = listOf(
@@ -95,6 +146,9 @@ fun BilibiliNavHost(
                 videoId = videoId,
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onDetailClick = {
+                    navController.navigate(Screen.VideoDetail.createRoute(videoId))
                 }
             )
         }

@@ -2,6 +2,7 @@ package app.bilibili_m25.domain.repository
 
 import app.bilibili_m25.data.local.VideoSortOrder
 import app.bilibili_m25.domain.model.Video
+import app.bilibili_m25.domain.model.VideoFolder
 import kotlinx.coroutines.flow.Flow
 
 interface VideoRepository {
@@ -17,4 +18,6 @@ interface VideoRepository {
     suspend fun toggleFavorite(id: Long)
     suspend fun updatePlayPosition(id: Long, position: Long)
     suspend fun incrementPlayCount(id: Long)
+    suspend fun getVideoFolders(): List<VideoFolder>
+    suspend fun getVideosByFolder(folderPath: String): List<Video>
 }

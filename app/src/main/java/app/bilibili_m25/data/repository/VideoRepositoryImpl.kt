@@ -6,6 +6,7 @@ import app.bilibili_m25.data.local.dao.VideoDao
 import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.local.entity.VideoEntity
 import app.bilibili_m25.domain.model.Video
+import app.bilibili_m25.domain.model.VideoFolder
 import app.bilibili_m25.domain.repository.VideoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -100,6 +101,17 @@ class VideoRepositoryImpl @Inject constructor(
 
     override suspend fun incrementPlayCount(id: Long) {
         videoDao.incrementPlayCount(id)
+    }
+
+    override suspend fun getVideoFolders(): List<VideoFolder> {
+        return videoLocalDataSource.scanVideosByFolder()
+    }
+
+    override suspend fun getVideosByFolder(folderPath: String): List<Video> {
+        val allVideos = videoDao.getAllVideosOnce()
+        return allVideos
+            .filter { it.path.substringBeforeLast("/") == folderPath }
+            .map { it.toDomainModel() }
     }
 
     private fun VideoEntity.toDomainModel(): Video {

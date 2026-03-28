@@ -1,5 +1,9 @@
 package app.bilibili_m25.util
 
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 object FormatUtils {
 
     fun formatDuration(durationMs: Long): String {
@@ -22,5 +26,10 @@ object FormatUtils {
             bytes >= 1024 -> String.format("%.1f KB", bytes / 1024.0)
             else -> "$bytes B"
         }
+    }
+
+    fun formatDateTime(timestamp: Long): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        return sdf.format(Date(timestamp * 1000))
     }
 }

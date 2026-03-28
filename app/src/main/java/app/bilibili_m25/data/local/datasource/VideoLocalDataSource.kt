@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import app.bilibili_m25.data.local.entity.VideoEntity
+import app.bilibili_m25.domain.model.VideoFolder
 import app.bilibili_m25.util.Logger
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -76,5 +77,32 @@ class VideoLocalDataSource @Inject constructor(
         }
 
         videos
+    }
+
+    suspend fun scanVideosByFolder(): List<VideoFolder> = withContext(Dispatchers.IO) {
+        val folderMap = mutableMapOf<String, MutableList<VideoEntity>>()
+
+        try {
+            val videos = scanVideos()
+            videos.forEach { video ->
+                val folderPath = video.path.substringBeforeLast("/")
+                val folderName = folderPath.substringAfterLast("/")
+                if (!folderMap.containsKey(folderPath)) {
+                    folderMap[folderPath] = mutableListOf()
+                }
+                folderMap[folderPath]?.add(video)
+            }
+        } catch (e: Exception) {
+            logger.e("VideoLocalDataSource", "Error scanning videos by folder", e)
+        }
+
+        folderMap.map { (path, videos) ->
+            VideoFolder(
+                path = path,
+                name = path.substringAfterLast("/"),
+                videoCount = videos.size,
+                lastModified = videos.maxOfOrNull { it.lastModified } ?: 0L
+            )
+        }.sortedByDescending { it.lastModified }
     }
 }

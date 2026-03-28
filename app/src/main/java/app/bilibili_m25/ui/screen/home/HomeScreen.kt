@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
@@ -26,6 +27,8 @@ fun HomeScreen(
     onVideoClick: (Long) -> Unit,
     onSearchClick: () -> Unit,
     showFavoritesOnly: Boolean = false,
+    onFolderClick: (String) -> Unit = {},
+    onFoldersClick: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -85,80 +88,99 @@ fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-                uiState.error != null -> {
-                    Column(
-                        modifier = Modifier.align(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
+            if (!showFavoritesOnly) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = onFoldersClick,
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text(
-                            text = uiState.error ?: "未知错误",
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { viewModel.refresh() }) {
-                            Text("重试")
-                        }
-                    }
-                }
-                uiState.videos.isEmpty() -> {
-                    Column(
-                        modifier = Modifier.align(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = if (showFavoritesOnly) "暂无收藏" else "暂无视频",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        if (!showFavoritesOnly) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = {
-                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_VIDEO)
-                            }) {
-                                Text("扫描视频")
-                            }
-                        }
-                    }
-                }
-                else -> {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 160.dp),
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(
-                            items = uiState.videos,
-                            key = { it.id }
-                        ) { video ->
-                            VideoCard(
-                                video = video,
-                                onClick = { onVideoClick(video.id) },
-                                onFavoriteClick = { viewModel.toggleFavorite(video.id) }
-                            )
-                        }
+                        Icon(Icons.Default.Folder, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("文件夹")
                     }
                 }
             }
 
-            if (uiState.isRefreshing) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter)
-                )
+            Box(modifier = Modifier.weight(1f)) {
+                when {
+                    uiState.isLoading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    uiState.error != null -> {
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = uiState.error ?: "未知错误",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = { viewModel.refresh() }) {
+                                Text("重试")
+                            }
+                        }
+                    }
+                    uiState.videos.isEmpty() -> {
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = if (showFavoritesOnly) "暂无收藏" else "暂无视频",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            if (!showFavoritesOnly) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(onClick = {
+                                    permissionLauncher.launch(Manifest.permission.READ_MEDIA_VIDEO)
+                                }) {
+                                    Text("扫描视频")
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 160.dp),
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(
+                                items = uiState.videos,
+                                key = { it.id }
+                            ) { video ->
+                                VideoCard(
+                                    video = video,
+                                    onClick = { onVideoClick(video.id) },
+                                    onFavoriteClick = { viewModel.toggleFavorite(video.id) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (uiState.isRefreshing) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter)
+                    )
+                }
             }
         }
     }
