@@ -19,7 +19,8 @@ data class VideoPlayerUiState(
     val playQueue: List<Video> = emptyList(),
     val currentIndex: Int = -1,
     val hasNext: Boolean = false,
-    val hasPrevious: Boolean = false
+    val hasPrevious: Boolean = false,
+    val playbackSpeed: Float = 1.0f
 )
 
 @HiltViewModel
@@ -27,7 +28,8 @@ class VideoPlayerViewModel @Inject constructor(
     private val videoRepository: VideoRepository,
     private val updatePlayPositionUseCase: UpdatePlayPositionUseCase,
     private val incrementPlayCountUseCase: IncrementPlayCountUseCase,
-    private val playQueueManager: PlayQueueManager
+    private val playQueueManager: PlayQueueManager,
+    private val playbackSpeedPreferences: PlaybackSpeedPreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(VideoPlayerUiState())
@@ -49,6 +51,11 @@ class VideoPlayerViewModel @Inject constructor(
                         hasPrevious = index > 0
                     )
                 }
+            }
+        }
+        viewModelScope.launch {
+            playbackSpeedPreferences.getPlaybackSpeed().collect { speed ->
+                _uiState.update { it.copy(playbackSpeed = speed) }
             }
         }
     }
@@ -119,5 +126,11 @@ class VideoPlayerViewModel @Inject constructor(
 
     fun clearQueue() {
         playQueueManager.clearQueue()
+    }
+
+    fun setPlaybackSpeed(speed: Float) {
+        viewModelScope.launch {
+            playbackSpeedPreferences.setPlaybackSpeed(speed)
+        }
     }
 }

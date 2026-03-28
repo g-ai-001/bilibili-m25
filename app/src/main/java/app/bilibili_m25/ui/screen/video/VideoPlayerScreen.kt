@@ -27,6 +27,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import app.bilibili_m25.data.local.PlaybackSpeedPreferences
 import app.bilibili_m25.domain.model.Video
 
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +42,7 @@ fun VideoPlayerScreen(
 
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var showQueue by remember { mutableStateOf(false) }
+    var showSpeedSelector by remember { mutableStateOf(false) }
 
     LaunchedEffect(videoId) {
         viewModel.loadVideo(videoId)
@@ -53,6 +55,7 @@ fun VideoPlayerScreen(
                 val mediaItem = MediaItem.fromUri(video.uri)
                 setMediaItem(mediaItem)
                 seekTo(video.lastPlayPosition)
+                setPlaybackSpeed(uiState.playbackSpeed)
                 prepare()
                 playWhenReady = true
 
@@ -64,6 +67,7 @@ fun VideoPlayerScreen(
                             if (nextVideo != null) {
                                 val nextMediaItem = MediaItem.fromUri(nextVideo.uri)
                                 setMediaItem(nextMediaItem)
+                                setPlaybackSpeed(uiState.playbackSpeed)
                                 prepare()
                                 playWhenReady = true
                             }
@@ -72,6 +76,10 @@ fun VideoPlayerScreen(
                 })
             }
         }
+    }
+
+    LaunchedEffect(uiState.playbackSpeed) {
+        exoPlayer?.setPlaybackSpeed(uiState.playbackSpeed)
     }
 
     DisposableEffect(Unit) {
@@ -102,6 +110,13 @@ fun VideoPlayerScreen(
                         IconButton(onClick = { showQueue = true }) {
                             Icon(Icons.Default.Queue, contentDescription = "播放队列")
                         }
+                    }
+                    IconButton(onClick = { showSpeedSelector = true }) {
+                        Text(
+                            text = "${uiState.playbackSpeed}x",
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelMedium
+                        )
                     }
                     IconButton(onClick = {
                         uiState.video?.let { viewModel.addToQueue(it) }
@@ -166,6 +181,17 @@ fun VideoPlayerScreen(
             onClear = {
                 viewModel.clearQueue()
                 showQueue = false
+            }
+        )
+    }
+
+    if (showSpeedSelector) {
+        PlaybackSpeedDialog(
+            currentSpeed = uiState.playbackSpeed,
+            onDismiss = { showSpeedSelector = false },
+            onSpeedSelected = { speed ->
+                viewModel.setPlaybackSpeed(speed)
+                showSpeedSelector = false
             }
         )
     }
@@ -242,6 +268,53 @@ private fun PlayQueueDialog(
             }
         },
         dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("关闭")
+            }
+        }
+    )
+}
+
+@Composable
+private fun PlaybackSpeedDialog(
+    currentSpeed: Float,
+    onDismiss: () -> Unit,
+    onSpeedSelected: (Float) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("播放倍速") },
+        text = {
+            Column {
+                PlaybackSpeedPreferences.PLAYBACK_SPEEDS.forEach { speed ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSpeedSelected(speed) }
+                            .background(
+                                if (speed == currentSpeed) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                                else Color.Transparent
+                            )
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${speed}x",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        if (speed == currentSpeed) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = "当前",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
             TextButton(onClick = onDismiss) {
                 Text("关闭")
             }
