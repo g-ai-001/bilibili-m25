@@ -44,14 +44,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             BilibiliTheme {
-                BilibiliApp()
+                BilibiliAppContent()
             }
         }
     }
 }
 
 @Composable
-fun BilibiliApp() {
+fun BilibiliAppContent() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

@@ -5,7 +5,7 @@
 - **项目名称**: bilibili-m25
 - **包名**: app.bilibili_m25
 - **项目类型**: 仿哔哩哔哩安卓本地应用
-- **版本号**: 0.1.2 (PATCH版本)
+- **版本号**: 0.1.3 (PATCH版本)
 - **目标用户**: 哔哩哔哩用户，需要本地视频管理功能
 - **核心功能**: 本地视频播放、本地视频管理、用户界面与主流安卓app一致
 
@@ -30,8 +30,12 @@
 
 ### 短期规划 (0.1.x)
 
+#### 0.1.3 版本 - 修复 Kotlin 编译错误
+- [ ] 修复 BilibiliApp 命名冲突
+- [ ] 修复 VideoPlayerViewModel catch 参数类型缺失
+
 #### 0.1.2 版本 - 修复 gradle-wrapper.jar 缺失问题
-- [ ] 修复 gradle-wrapper.jar 缺失导致的 CI 构建失败
+- [x] 修复 gradle-wrapper.jar 缺失导致的 CI 构建失败
 
 #### 0.1.1 版本 - 修复 gradlew 执行权限问题
 - [x] 修复 gradlew 缺少执行权限导致的 CI 构建失败
@@ -63,6 +67,10 @@
 - 用户体验优化
 
 ## 已完成版本
+
+### 0.1.3
+- 修复 BilibiliApp 命名冲突
+- 修复 VideoPlayerViewModel catch 参数类型缺失
 
 ### 0.1.2
 - 修复 gradle-wrapper.jar 缺失导致的 CI 构建失败

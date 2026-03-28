@@ -49,7 +49,7 @@ class VideoPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updatePlayPositionUseCase(videoId, position)
-            } catch (e) {
+            } catch (e: Exception) {
                 // Silently fail
             }
         }
