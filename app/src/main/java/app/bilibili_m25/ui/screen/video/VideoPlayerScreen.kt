@@ -62,29 +62,26 @@ fun VideoPlayerScreen(
     LaunchedEffect(uiState.video) {
         uiState.video?.let { video ->
             exoPlayer?.release()
-            exoPlayer = ExoPlayer.Builder(context).build().apply {
-                val mediaItem = MediaItem.fromUri(video.uri)
-                setMediaItem(mediaItem)
-                setPlaybackSpeed(uiState.playbackSpeed)
-                prepare()
-                playWhenReady = true
+            val player = ExoPlayer.Builder(context).build()
+            player.setMediaItem(MediaItem.fromUri(video.uri))
+            player.setPlaybackSpeed(uiState.playbackSpeed)
+            player.prepare()
+            player.playWhenReady = true
 
-                addListener(object : Player.Listener {
-                    override fun onPlaybackStateChanged(playbackState: Int) {
-                        if (playbackState == Player.STATE_ENDED) {
-                            viewModel.savePlayPosition(0)
-                            val nextVideo = viewModel.playNext()
-                            if (nextVideo != null) {
-                                val nextMediaItem = MediaItem.fromUri(nextVideo.uri)
-                                setMediaItem(nextMediaItem)
-                                setPlaybackSpeed(uiState.playbackSpeed)
-                                prepare()
-                                playWhenReady = true
-                            }
+            player.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    if (playbackState == Player.STATE_ENDED) {
+                        viewModel.savePlayPosition(0)
+                        val nextVideo = viewModel.playNext()
+                        if (nextVideo != null) {
+                            player.setMediaItem(MediaItem.fromUri(nextVideo.uri))
+                            player.setPlaybackSpeed(uiState.playbackSpeed)
+                            player.prepare()
+                            player.playWhenReady = true
                         }
                     }
-                })
-            }
+                }
+            })
 
             if (video.lastPlayPosition > 0 && video.duration > 0) {
                 val progress = video.lastPlayPosition.toFloat() / video.duration.toFloat()
@@ -92,9 +89,10 @@ fun VideoPlayerScreen(
                     pendingSeekPosition = video.lastPlayPosition
                     showResumeDialog = true
                 } else {
-                    seekTo(video.lastPlayPosition)
+                    player.seekTo(video.lastPlayPosition)
                 }
             }
+            exoPlayer = player
         }
     }
 
