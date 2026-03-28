@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.exoplayer.ExoPlayer
 import app.bilibili_m25.data.local.PlaybackSpeedPreferences
 import app.bilibili_m25.data.repository.PlayQueueManager
 import app.bilibili_m25.domain.model.Video
