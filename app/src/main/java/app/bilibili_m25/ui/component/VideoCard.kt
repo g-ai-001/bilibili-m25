@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.bilibili_m25.domain.model.Video
+import app.bilibili_m25.util.FormatUtils
 import coil3.compose.AsyncImage
 
 @Composable
@@ -72,7 +73,7 @@ fun VideoCard(
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
                     Text(
-                        text = formatDuration(video.duration),
+                        text = FormatUtils.formatDuration(video.duration),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White
                     )
@@ -96,7 +97,7 @@ fun VideoCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "${formatFileSize(video.size)} · ${video.playCount}次播放",
+                        text = "${FormatUtils.formatFileSize(video.size)} · ${video.playCount}次播放",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -111,27 +112,5 @@ fun VideoCard(
                 }
             }
         }
-    }
-}
-
-private fun formatDuration(durationMs: Long): String {
-    val totalSeconds = durationMs / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-
-    return if (hours > 0) {
-        String.format("%d:%02d:%02d", hours, minutes, seconds)
-    } else {
-        String.format("%d:%02d", minutes, seconds)
-    }
-}
-
-private fun formatFileSize(bytes: Long): String {
-    return when {
-        bytes >= 1024 * 1024 * 1024 -> String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0))
-        bytes >= 1024 * 1024 -> String.format("%.1f MB", bytes / (1024.0 * 1024.0))
-        bytes >= 1024 -> String.format("%.1f KB", bytes / 1024.0)
-        else -> "$bytes B"
     }
 }

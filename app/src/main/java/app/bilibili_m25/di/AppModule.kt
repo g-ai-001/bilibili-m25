@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import app.bilibili_m25.data.local.BilibiliDatabase
 import app.bilibili_m25.data.local.PlaybackSpeedPreferences
+import app.bilibili_m25.data.local.SortPreferences
+import app.bilibili_m25.data.local.ThemePreferences
 import app.bilibili_m25.data.local.dao.VideoDao
 import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.repository.VideoRepositoryImpl
 import app.bilibili_m25.domain.repository.VideoRepository
-import app.bilibili_m25.util.Logger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,14 +23,26 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLogger(): Logger = Logger()
-
-    @Provides
-    @Singleton
     fun providePlaybackSpeedPreferences(
         @ApplicationContext context: Context
     ): PlaybackSpeedPreferences {
         return PlaybackSpeedPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSortPreferences(
+        @ApplicationContext context: Context
+    ): SortPreferences {
+        return SortPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemePreferences(
+        @ApplicationContext context: Context
+    ): ThemePreferences {
+        return ThemePreferences(context)
     }
 
     @Provides
@@ -56,9 +69,8 @@ object AppModule {
     @Singleton
     fun provideVideoRepository(
         videoDao: VideoDao,
-        videoLocalDataSource: VideoLocalDataSource,
-        logger: Logger
+        videoLocalDataSource: VideoLocalDataSource
     ): VideoRepository {
-        return VideoRepositoryImpl(videoDao, videoLocalDataSource, logger)
+        return VideoRepositoryImpl(videoDao, videoLocalDataSource)
     }
 }

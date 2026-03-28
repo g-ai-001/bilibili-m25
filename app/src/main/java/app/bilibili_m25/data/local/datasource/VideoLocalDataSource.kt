@@ -68,8 +68,8 @@ class VideoLocalDataSource @Inject constructor(
                             thumbnailUri = thumbnailUri
                         )
                     )
-                    logger.d("VideoLocalDataSource", "Found video: $name at $path")
                 }
+                logger.i("VideoLocalDataSource", "Scanned ${videos.size} videos")
             }
         } catch (e: Exception) {
             logger.e("VideoLocalDataSource", "Error scanning videos", e)

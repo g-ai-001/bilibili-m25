@@ -7,7 +7,6 @@ import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.local.entity.VideoEntity
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
-import app.bilibili_m25.util.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,8 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class VideoRepositoryImpl @Inject constructor(
     private val videoDao: VideoDao,
-    private val videoLocalDataSource: VideoLocalDataSource,
-    private val logger: Logger
+    private val videoLocalDataSource: VideoLocalDataSource
 ) : VideoRepository {
 
     override fun getAllVideos(): Flow<List<Video>> {
@@ -63,18 +61,15 @@ class VideoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun scanAndSyncVideos() {
-        logger.i("VideoRepository", "Starting video scan")
         val scannedVideos = videoLocalDataSource.scanVideos()
 
         scannedVideos.forEach { scanned ->
             val existing = videoDao.getVideoByPath(scanned.path)
             if (existing == null) {
                 videoDao.insertVideo(scanned)
-                logger.d("VideoRepository", "Added new video: ${scanned.title}")
             } else {
                 if (existing.lastModified != scanned.lastModified) {
                     videoDao.updateVideo(scanned.copy(id = existing.id))
-                    logger.d("VideoRepository", "Updated video: ${scanned.title}")
                 }
             }
         }
@@ -83,9 +78,7 @@ class VideoRepositoryImpl @Inject constructor(
         val allVideos = videoDao.getAllVideosOnce()
         allVideos.filter { it.path !in scannedPaths }.forEach { orphaned ->
             videoDao.deleteVideo(orphaned)
-            logger.w("VideoRepository", "Removed orphaned video: ${orphaned.title}")
         }
-        logger.i("VideoRepository", "Video scan completed")
     }
 
     override suspend fun updateVideo(video: Video) {
