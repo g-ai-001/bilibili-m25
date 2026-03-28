@@ -29,7 +29,7 @@ class PlaybackManager @Inject constructor(
 
     fun resume() {
         val intent = Intent(context, PlaybackService::class.java).apply {
-            action = PlaybackService.ACTION_PLAY
+            action = PlaybackService.ACTION_RESUME
         }
         context.startService(intent)
     }
