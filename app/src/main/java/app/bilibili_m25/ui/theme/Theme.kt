@@ -78,7 +78,8 @@ fun BilibiliTheme(
         SideEffect {
             val window = (view.context as android.app.Activity).window
             WindowCompat.setDecorFitsSystemWindows(window, false)
-            window.statusBarColor = Color.Transparent.toArgb()
+            // 设置状态栏背景色与TopAppBar背景融合
+            window.statusBarColor = colorScheme.primaryContainer.toArgb()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 window.insetsController?.setSystemBarsAppearance(
                     if (darkTheme) 0 else WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
