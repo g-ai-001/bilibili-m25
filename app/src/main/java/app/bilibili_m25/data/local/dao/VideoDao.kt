@@ -12,11 +12,32 @@ interface VideoDao {
     @Query("SELECT * FROM videos ORDER BY lastModified DESC")
     suspend fun getAllVideosOnce(): List<VideoEntity>
 
+    @Query("SELECT * FROM videos ORDER BY title ASC")
+    fun getAllVideosByNameAsc(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos ORDER BY title DESC")
+    fun getAllVideosByNameDesc(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos ORDER BY lastModified ASC")
+    fun getAllVideosByTimeAsc(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos ORDER BY lastModified DESC")
+    fun getAllVideosByTimeDesc(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos ORDER BY size ASC")
+    fun getAllVideosBySizeAsc(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos ORDER BY size DESC")
+    fun getAllVideosBySizeDesc(): Flow<List<VideoEntity>>
+
     @Query("SELECT * FROM videos WHERE title LIKE '%' || :query || '%' ORDER BY lastModified DESC")
     fun searchVideos(query: String): Flow<List<VideoEntity>>
 
     @Query("SELECT * FROM videos WHERE isFavorite = 1 ORDER BY lastModified DESC")
     fun getFavoriteVideos(): Flow<List<VideoEntity>>
+
+    @Query("SELECT * FROM videos WHERE playCount > 0 ORDER BY lastModified DESC")
+    fun getHistoryVideos(): Flow<List<VideoEntity>>
 
     @Query("SELECT * FROM videos WHERE id = :id")
     suspend fun getVideoById(id: Long): VideoEntity?

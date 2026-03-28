@@ -1,5 +1,6 @@
 package app.bilibili_m25.domain.usecase
 
+import app.bilibili_m25.data.local.VideoSortOrder
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
 import kotlinx.coroutines.flow.Flow
@@ -9,6 +10,7 @@ class GetAllVideosUseCase @Inject constructor(
     private val repository: VideoRepository
 ) {
     operator fun invoke(): Flow<List<Video>> = repository.getAllVideos()
+    operator fun invoke(sortOrder: VideoSortOrder): Flow<List<Video>> = repository.getAllVideos(sortOrder)
 }
 
 class SearchVideosUseCase @Inject constructor(
@@ -21,6 +23,12 @@ class GetFavoriteVideosUseCase @Inject constructor(
     private val repository: VideoRepository
 ) {
     operator fun invoke(): Flow<List<Video>> = repository.getFavoriteVideos()
+}
+
+class GetHistoryVideosUseCase @Inject constructor(
+    private val repository: VideoRepository
+) {
+    operator fun invoke(): Flow<List<Video>> = repository.getHistoryVideos()
 }
 
 class ScanVideosUseCase @Inject constructor(

@@ -10,12 +10,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.bilibili_m25.ui.component.SortDialog
 import app.bilibili_m25.ui.component.VideoCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +30,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var hasPermission by remember { mutableStateOf(false) }
+    var showSortDialog by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -42,6 +45,14 @@ fun HomeScreen(
         viewModel.loadVideos(showFavoritesOnly)
     }
 
+    if (showSortDialog) {
+        SortDialog(
+            currentSortOrder = uiState.sortOrder,
+            onSortOrderSelected = { viewModel.setSortOrder(it) },
+            onDismiss = { showSortDialog = false }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,6 +63,9 @@ fun HomeScreen(
                     if (!showFavoritesOnly) {
                         IconButton(onClick = onSearchClick) {
                             Icon(Icons.Default.Search, contentDescription = "搜索")
+                        }
+                        IconButton(onClick = { showSortDialog = true }) {
+                            Icon(Icons.Default.Sort, contentDescription = "排序")
                         }
                         IconButton(onClick = {
                             if (hasPermission) {

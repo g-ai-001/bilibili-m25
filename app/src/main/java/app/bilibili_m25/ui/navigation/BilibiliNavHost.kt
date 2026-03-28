@@ -16,6 +16,7 @@ import app.bilibili_m25.ui.screen.home.HomeScreen
 import app.bilibili_m25.ui.screen.video.VideoPlayerScreen
 import app.bilibili_m25.ui.screen.search.SearchScreen
 import app.bilibili_m25.ui.screen.settings.SettingsScreen
+import app.bilibili_m25.ui.screen.history.HistoryScreen
 
 @Composable
 fun BilibiliNavHost(
@@ -68,6 +69,14 @@ fun BilibiliNavHost(
                     navController.navigate(Screen.Search.route)
                 },
                 showFavoritesOnly = true
+            )
+        }
+
+        composable(Screen.History.route) {
+            HistoryScreen(
+                onVideoClick = { videoId ->
+                    navController.navigate(Screen.VideoPlayer.createRoute(videoId))
+                }
             )
         }
 

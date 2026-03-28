@@ -1,6 +1,7 @@
 package app.bilibili_m25.data.repository
 
 import android.net.Uri
+import app.bilibili_m25.data.local.VideoSortOrder
 import app.bilibili_m25.data.local.dao.VideoDao
 import app.bilibili_m25.data.local.datasource.VideoLocalDataSource
 import app.bilibili_m25.data.local.entity.VideoEntity
@@ -25,6 +26,20 @@ class VideoRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAllVideos(sortOrder: VideoSortOrder): Flow<List<Video>> {
+        val flow = when (sortOrder) {
+            VideoSortOrder.NAME_ASC -> videoDao.getAllVideosByNameAsc()
+            VideoSortOrder.NAME_DESC -> videoDao.getAllVideosByNameDesc()
+            VideoSortOrder.TIME_ASC -> videoDao.getAllVideosByTimeAsc()
+            VideoSortOrder.TIME_DESC -> videoDao.getAllVideosByTimeDesc()
+            VideoSortOrder.SIZE_ASC -> videoDao.getAllVideosBySizeAsc()
+            VideoSortOrder.SIZE_DESC -> videoDao.getAllVideosBySizeDesc()
+        }
+        return flow.map { entities ->
+            entities.map { it.toDomainModel() }
+        }
+    }
+
     override fun searchVideos(query: String): Flow<List<Video>> {
         return videoDao.searchVideos(query).map { entities ->
             entities.map { it.toDomainModel() }
@@ -33,6 +48,12 @@ class VideoRepositoryImpl @Inject constructor(
 
     override fun getFavoriteVideos(): Flow<List<Video>> {
         return videoDao.getFavoriteVideos().map { entities ->
+            entities.map { it.toDomainModel() }
+        }
+    }
+
+    override fun getHistoryVideos(): Flow<List<Video>> {
+        return videoDao.getHistoryVideos().map { entities ->
             entities.map { it.toDomainModel() }
         }
     }

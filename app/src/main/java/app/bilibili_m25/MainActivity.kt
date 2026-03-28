@@ -7,12 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -69,12 +68,14 @@ fun BilibiliAppContent(playQueueManager: PlayQueueManager) {
 
     val bottomNavItems = listOf(
         BottomNavItem("首页", Icons.Default.Home, Screen.Home.route),
+        BottomNavItem("历史", Icons.Default.History, Screen.History.route),
         BottomNavItem("收藏", Icons.Default.Favorite, Screen.Favorites.route),
         BottomNavItem("设置", Icons.Default.Settings, Screen.Settings.route)
     )
 
     val showBottomBar = currentDestination?.route in listOf(
         Screen.Home.route,
+        Screen.History.route,
         Screen.Favorites.route,
         Screen.Settings.route
     )
