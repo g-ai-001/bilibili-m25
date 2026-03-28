@@ -157,10 +157,10 @@
 
 ## 版本历史
 
-- **0.8.2** (开发中): 重构优化
-  - [ ] 修复SwipeableVideoCard滑动收藏图标显示错误（左右滑动显示相同图标）
-  - [ ] 添加PlaybackSpeedPreferences构造函数注入简化AppModule
-  - [ ] 提取VideoGrid通用组件减少HomeScreen和HistoryScreen重复代码
+- **0.8.2** (已发布): 重构优化
+  - [x] 修复SwipeableVideoCard滑动收藏图标显示错误（左右滑动显示相同图标）
+  - [x] 添加PlaybackSpeedPreferences构造函数注入简化AppModule
+  - [x] 提取VideoGrid通用组件减少HomeScreen和HistoryScreen重复代码
 
 - **0.8.1** (已发布): 修复后台播放通知控制问题
   - [x] 修复PlaybackService缺少ACTION_RESUME导致无法恢复播放问题
