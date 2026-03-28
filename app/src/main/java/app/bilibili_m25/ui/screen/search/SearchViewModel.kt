@@ -25,8 +25,7 @@ data class SearchUiState(
 class SearchViewModel @Inject constructor(
     private val searchVideosUseCase: SearchVideosUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val deleteVideoUseCase: DeleteVideoUseCase,
-    private val logger: Logger
+    private val deleteVideoUseCase: DeleteVideoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
@@ -50,7 +49,7 @@ class SearchViewModel @Inject constructor(
 
             searchVideosUseCase(query)
                 .catch { e ->
-                    logger.e("SearchViewModel", "搜索失败", e)
+                    Logger.e("SearchViewModel", "搜索失败", e)
                     _uiState.update {
                         it.copy(
                             results = emptyList(),

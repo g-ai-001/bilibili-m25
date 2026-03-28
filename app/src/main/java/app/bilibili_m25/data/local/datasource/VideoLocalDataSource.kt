@@ -15,8 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class VideoLocalDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val logger: Logger
+    @ApplicationContext private val context: Context
 ) {
     suspend fun scanVideos(): List<VideoEntity> = withContext(Dispatchers.IO) {
         val videos = mutableListOf<VideoEntity>()
@@ -70,10 +69,10 @@ class VideoLocalDataSource @Inject constructor(
                         )
                     )
                 }
-                logger.i("VideoLocalDataSource", "Scanned ${videos.size} videos")
+                Logger.i("VideoLocalDataSource", "Scanned ${videos.size} videos")
             }
         } catch (e: Exception) {
-            logger.e("VideoLocalDataSource", "Error scanning videos", e)
+            Logger.e("VideoLocalDataSource", "Error scanning videos", e)
         }
 
         videos
@@ -93,7 +92,7 @@ class VideoLocalDataSource @Inject constructor(
                 folderMap[folderPath]?.add(video)
             }
         } catch (e: Exception) {
-            logger.e("VideoLocalDataSource", "Error scanning videos by folder", e)
+            Logger.e("VideoLocalDataSource", "Error scanning videos by folder", e)
         }
 
         folderMap.map { (path, videos) ->

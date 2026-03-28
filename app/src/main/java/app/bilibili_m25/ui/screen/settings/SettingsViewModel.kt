@@ -16,7 +16,6 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    val logger: Logger,
     private val themePreferences: ThemePreferences
 ) : ViewModel() {
 

@@ -38,9 +38,6 @@ data class BottomNavItem(
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var logger: Logger
-
-    @Inject
     lateinit var themePreferences: ThemePreferences
 
     @Inject
@@ -50,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        logger.init(this)
+        Logger.init(this)
 
         setContent {
             val themeMode by themePreferences.getThemeMode().collectAsState(initial = ThemeMode.SYSTEM)

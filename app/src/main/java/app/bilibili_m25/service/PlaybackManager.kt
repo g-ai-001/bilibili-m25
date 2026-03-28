@@ -11,33 +11,31 @@ import javax.inject.Singleton
 class PlaybackManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    fun playVideo(uri: Uri, title: String) {
+    private fun sendAction(action: String, vararg extras: Pair<String, String>) {
         val intent = Intent(context, PlaybackService::class.java).apply {
-            action = PlaybackService.ACTION_PLAY
-            putExtra(PlaybackService.EXTRA_VIDEO_URI, uri.toString())
-            putExtra(PlaybackService.EXTRA_VIDEO_TITLE, title)
+            this.action = action
+            extras.forEach { (key, value) -> putExtra(key, value) }
         }
         context.startForegroundService(intent)
     }
 
+    fun playVideo(uri: Uri, title: String) {
+        sendAction(
+            PlaybackService.ACTION_PLAY,
+            PlaybackService.EXTRA_VIDEO_URI to uri.toString(),
+            PlaybackService.EXTRA_VIDEO_TITLE to title
+        )
+    }
+
     fun pause() {
-        val intent = Intent(context, PlaybackService::class.java).apply {
-            action = PlaybackService.ACTION_PAUSE
-        }
-        context.startService(intent)
+        sendAction(PlaybackService.ACTION_PAUSE)
     }
 
     fun resume() {
-        val intent = Intent(context, PlaybackService::class.java).apply {
-            action = PlaybackService.ACTION_RESUME
-        }
-        context.startService(intent)
+        sendAction(PlaybackService.ACTION_RESUME)
     }
 
     fun stop() {
-        val intent = Intent(context, PlaybackService::class.java).apply {
-            action = PlaybackService.ACTION_STOP
-        }
-        context.startService(intent)
+        sendAction(PlaybackService.ACTION_STOP)
     }
 }

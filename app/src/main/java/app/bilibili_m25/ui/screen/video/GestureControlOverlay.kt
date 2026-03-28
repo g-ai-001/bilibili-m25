@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import app.bilibili_m25.util.FormatUtils
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
@@ -197,7 +198,7 @@ fun GestureControlOverlay(
                 ) {
                     // 时间显示
                     Text(
-                        text = "${formatDuration(currentPosition)} / ${formatDuration(duration)}",
+                        text = "${FormatUtils.formatDuration(currentPosition)} / ${FormatUtils.formatDuration(duration)}",
                         color = Color.White,
                         fontSize = 12.sp
                     )
@@ -274,18 +275,5 @@ fun GestureControlOverlay(
                 }
             }
         }
-    }
-}
-
-private fun formatDuration(millis: Long): String {
-    val totalSeconds = millis / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-
-    return if (hours > 0) {
-        String.format("%d:%02d:%02d", hours, minutes, seconds)
-    } else {
-        String.format("%02d:%02d", minutes, seconds)
     }
 }

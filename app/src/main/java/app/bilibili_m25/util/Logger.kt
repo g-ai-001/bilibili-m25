@@ -1,17 +1,13 @@
 package app.bilibili_m25.util
 
 import android.content.Context
-import android.os.Environment
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class Logger @Inject constructor() {
+object Logger {
     private var logFile: File? = null
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
     private val fileNameFormat = SimpleDateFormat("yyyy-MM-dd", Locale.SIMPLIFIED_CHINESE)

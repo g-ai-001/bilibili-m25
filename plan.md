@@ -157,6 +157,13 @@
 
 ## 版本历史
 
+- **0.8.3** (规划中): 重构优化
+  - [ ] 重构formatDuration函数（删除GestureControlOverlay中的重复定义）
+  - [ ] 重构PlaybackManager Intent创建模式（提取通用sendAction方法）
+  - [ ] 重构VideoDao排序查询方法（合并为单一通用方法）
+  - [ ] 重构Logger为object单例模式
+  - [ ] 优化SearchViewModel搜索防抖逻辑
+
 - **0.8.2** (已发布): 重构优化
   - [x] 修复SwipeableVideoCard滑动收藏图标显示错误（左右滑动显示相同图标）
   - [x] 添加PlaybackSpeedPreferences构造函数注入简化AppModule

@@ -24,9 +24,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 
 @Singleton
-class ScreenshotHelper @Inject constructor(
-    private val logger: Logger
-) {
+class ScreenshotHelper @Inject constructor() {
     companion object {
         private const val TAG = "ScreenshotHelper"
     }
@@ -54,7 +52,7 @@ class ScreenshotHelper @Inject constructor(
                         continuation.resume(null)
                     }
                 } catch (e: Exception) {
-                    logger.e(TAG, "Failed to capture frame", e)
+                    Logger.e(TAG, "Failed to capture frame", e)
                     continuation.resume(null)
                 }
             }
@@ -71,13 +69,13 @@ class ScreenshotHelper @Inject constructor(
             bitmap.recycle()
 
             if (uri != null) {
-                logger.i(TAG, "Screenshot saved: $uri")
+                Logger.i(TAG, "Screenshot saved: $uri")
                 Result.success(uri)
             } else {
                 Result.failure(Exception("保存截图失败"))
             }
         } catch (e: Exception) {
-            logger.e(TAG, "Screenshot failed", e)
+            Logger.e(TAG, "Screenshot failed", e)
             Result.failure(e)
         }
     }
@@ -112,7 +110,7 @@ class ScreenshotHelper @Inject constructor(
 
             uri
         } catch (e: Exception) {
-            logger.e(TAG, "Failed to save bitmap to gallery", e)
+            Logger.e(TAG, "Failed to save bitmap to gallery", e)
             null
         }
     }
