@@ -87,7 +87,7 @@ fun SwipeableVideoCard(
                 else -> Alignment.Center
             }
             val icon = when (direction) {
-                SwipeToDismissBoxValue.StartToEnd -> if (video.isFavorite) Icons.Default.Favorite else Icons.Default.Favorite
+                SwipeToDismissBoxValue.StartToEnd -> if (video.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
                 SwipeToDismissBoxValue.EndToStart -> Icons.Default.Delete
                 else -> null
             }

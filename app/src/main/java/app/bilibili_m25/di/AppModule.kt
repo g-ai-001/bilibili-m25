@@ -3,7 +3,6 @@ package app.bilibili_m25.di
 import android.content.Context
 import androidx.room.Room
 import app.bilibili_m25.data.local.BilibiliDatabase
-import app.bilibili_m25.data.local.PlaybackSpeedPreferences
 import app.bilibili_m25.data.local.SortPreferences
 import app.bilibili_m25.data.local.ThemePreferences
 import app.bilibili_m25.data.local.dao.VideoDao
@@ -20,14 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    @Singleton
-    fun providePlaybackSpeedPreferences(
-        @ApplicationContext context: Context
-    ): PlaybackSpeedPreferences {
-        return PlaybackSpeedPreferences(context)
-    }
 
     @Provides
     @Singleton
