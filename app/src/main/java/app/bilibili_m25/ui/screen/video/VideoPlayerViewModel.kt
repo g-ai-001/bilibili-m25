@@ -2,6 +2,7 @@ package app.bilibili_m25.ui.screen.video
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.bilibili_m25.data.local.PlaybackSpeedPreferences
 import app.bilibili_m25.data.repository.PlayQueueManager
 import app.bilibili_m25.domain.model.Video
 import app.bilibili_m25.domain.repository.VideoRepository
