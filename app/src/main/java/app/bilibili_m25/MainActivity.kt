@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         logger.init(this)
 
         setContent {
-            val themeMode by themePreferences.getThemeMode(this).collectAsState(initial = ThemeMode.SYSTEM)
+            val themeMode by themePreferences.getThemeMode().collectAsState(initial = ThemeMode.SYSTEM)
 
             BilibiliTheme(themeMode = themeMode) {
                 BilibiliAppContent(playQueueManager = playQueueManager)
