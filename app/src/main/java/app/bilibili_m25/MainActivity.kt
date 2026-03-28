@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -18,6 +17,9 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import app.bilibili_m25.data.local.ThemeMode
+import app.bilibili_m25.data.local.ThemePreferences
+import app.bilibili_m25.data.repository.PlayQueueManager
 import app.bilibili_m25.ui.navigation.BilibiliNavHost
 import app.bilibili_m25.ui.navigation.Screen
 import app.bilibili_m25.ui.theme.BilibiliTheme
@@ -37,6 +39,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var logger: Logger
 
+    @Inject
+    lateinit var themePreferences: ThemePreferences
+
+    @Inject
+    lateinit var playQueueManager: PlayQueueManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -44,15 +52,17 @@ class MainActivity : ComponentActivity() {
         logger.init(this)
 
         setContent {
-            BilibiliTheme {
-                BilibiliAppContent()
+            val themeMode by themePreferences.getThemeMode(this).collectAsState(initial = ThemeMode.SYSTEM)
+
+            BilibiliTheme(themeMode = themeMode) {
+                BilibiliAppContent(playQueueManager = playQueueManager)
             }
         }
     }
 }
 
 @Composable
-fun BilibiliAppContent() {
+fun BilibiliAppContent(playQueueManager: PlayQueueManager) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -96,7 +106,8 @@ fun BilibiliAppContent() {
     ) { paddingValues ->
         BilibiliNavHost(
             navController = navController,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            playQueueManager = playQueueManager
         )
     }
 }
