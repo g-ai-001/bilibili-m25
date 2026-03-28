@@ -31,6 +31,10 @@ class HistoryViewModel @Inject constructor(
         loadHistory()
     }
 
+    fun refreshHistory() {
+        loadHistory()
+    }
+
     private fun loadHistory() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }

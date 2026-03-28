@@ -35,7 +35,7 @@ fun HistoryScreen(
             onVideoClick = onVideoClick,
             onFavoriteClick = { viewModel.toggleFavorite(it) },
             onDeleteClick = { viewModel.deleteVideo(it) },
-            onRetry = { viewModel.loadHistory() },
+            onRetry = { viewModel.refreshHistory() },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
