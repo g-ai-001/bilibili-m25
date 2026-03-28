@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.bilibili_m25.BuildConfig
 import app.bilibili_m25.data.local.ThemeMode
+import app.bilibili_m25.util.Logger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,8 +26,7 @@ fun SettingsScreen(
     var showThemeDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.logger.init(context)
-        logDirPath = viewModel.logger.getLogDir()?.absolutePath ?: "未初始化"
+        logDirPath = Logger.getLogDir()?.absolutePath ?: "未初始化"
         viewModel.loadThemeMode()
     }
 
