@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.bilibili_m25.domain.model.Video
+import coil.compose.AsyncImage
 
 @Composable
 fun VideoCard(
@@ -42,14 +43,23 @@ fun VideoCard(
                     .aspectRatio(16f / 9f)
                     .background(Color(0xFF2A2A2A))
             ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .align(Alignment.Center),
-                    tint = Color.White.copy(alpha = 0.7f)
-                )
+                if (video.thumbnailUri != null) {
+                    AsyncImage(
+                        model = video.thumbnailUri,
+                        contentDescription = video.title,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center),
+                        tint = Color.White.copy(alpha = 0.7f)
+                    )
+                }
 
                 Box(
                     modifier = Modifier

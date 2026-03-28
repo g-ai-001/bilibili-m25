@@ -1,8 +1,13 @@
 package app.bilibili_m25.ui.screen.home
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
@@ -23,6 +28,16 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var hasPermission by remember { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        hasPermission = isGranted
+        if (isGranted) {
+            viewModel.refresh()
+        }
+    }
 
     LaunchedEffect(showFavoritesOnly) {
         viewModel.loadVideos(showFavoritesOnly)
@@ -39,7 +54,13 @@ fun HomeScreen(
                         IconButton(onClick = onSearchClick) {
                             Icon(Icons.Default.Search, contentDescription = "搜索")
                         }
-                        IconButton(onClick = { viewModel.refresh() }) {
+                        IconButton(onClick = {
+                            if (hasPermission) {
+                                viewModel.refresh()
+                            } else {
+                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_VIDEO)
+                            }
+                        }) {
                             Icon(Icons.Default.Refresh, contentDescription = "刷新")
                         }
                     }
@@ -89,17 +110,21 @@ fun HomeScreen(
                         )
                         if (!showFavoritesOnly) {
                             Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { viewModel.refresh() }) {
+                            Button(onClick = {
+                                permissionLauncher.launch(Manifest.permission.READ_MEDIA_VIDEO)
+                            }) {
                                 Text("扫描视频")
                             }
                         }
                     }
                 }
                 else -> {
-                    LazyColumn(
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 160.dp),
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        contentPadding = PaddingValues(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(
                             items = uiState.videos,

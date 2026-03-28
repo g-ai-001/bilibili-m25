@@ -9,6 +9,9 @@ interface VideoDao {
     @Query("SELECT * FROM videos ORDER BY lastModified DESC")
     fun getAllVideos(): Flow<List<VideoEntity>>
 
+    @Query("SELECT * FROM videos ORDER BY lastModified DESC")
+    suspend fun getAllVideosOnce(): List<VideoEntity>
+
     @Query("SELECT * FROM videos WHERE title LIKE '%' || :query || '%' ORDER BY lastModified DESC")
     fun searchVideos(query: String): Flow<List<VideoEntity>>
 

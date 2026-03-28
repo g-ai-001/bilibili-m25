@@ -59,11 +59,10 @@ class VideoRepositoryImpl @Inject constructor(
         }
 
         val scannedPaths = scannedVideos.map { it.path }.toSet()
-        videoDao.getAllVideos().collect { allVideos ->
-            allVideos.filter { it.path !in scannedPaths }.forEach { orphaned ->
-                videoDao.deleteVideo(orphaned)
-                logger.w("VideoRepository", "Removed orphaned video: ${orphaned.title}")
-            }
+        val allVideos = videoDao.getAllVideosOnce()
+        allVideos.filter { it.path !in scannedPaths }.forEach { orphaned ->
+            videoDao.deleteVideo(orphaned)
+            logger.w("VideoRepository", "Removed orphaned video: ${orphaned.title}")
         }
         logger.i("VideoRepository", "Video scan completed")
     }
@@ -98,7 +97,7 @@ class VideoRepositoryImpl @Inject constructor(
             duration = duration,
             size = size,
             lastModified = lastModified,
-            thumbnailPath = thumbnailPath,
+            thumbnailUri = thumbnailUri?.let { Uri.parse(it) },
             isFavorite = isFavorite,
             playCount = playCount,
             lastPlayPosition = lastPlayPosition
@@ -113,7 +112,7 @@ class VideoRepositoryImpl @Inject constructor(
             duration = duration,
             size = size,
             lastModified = lastModified,
-            thumbnailPath = thumbnailPath,
+            thumbnailUri = thumbnailUri?.toString(),
             isFavorite = isFavorite,
             playCount = playCount,
             lastPlayPosition = lastPlayPosition

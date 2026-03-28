@@ -3,7 +3,6 @@ package app.bilibili_m25.data.local.datasource
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import app.bilibili_m25.data.local.entity.VideoEntity
 import app.bilibili_m25.util.Logger
@@ -54,10 +53,10 @@ class VideoLocalDataSource @Inject constructor(
                     val size = cursor.getLong(sizeColumn)
                     val date = cursor.getLong(dateColumn)
 
-                    val contentUri = ContentUris.withAppendedId(
+                    val thumbnailUri = ContentUris.withAppendedId(
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                         id
-                    )
+                    ).toString()
 
                     videos.add(
                         VideoEntity(
@@ -65,7 +64,8 @@ class VideoLocalDataSource @Inject constructor(
                             path = path,
                             duration = duration,
                             size = size,
-                            lastModified = date
+                            lastModified = date,
+                            thumbnailUri = thumbnailUri
                         )
                     )
                     logger.d("VideoLocalDataSource", "Found video: $name at $path")

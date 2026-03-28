@@ -10,7 +10,7 @@ data class Video(
     val duration: Long = 0,
     val size: Long = 0,
     val lastModified: Long = 0,
-    val thumbnailPath: String? = null,
+    val thumbnailUri: Uri? = null,
     val isFavorite: Boolean = false,
     val playCount: Int = 0,
     val lastPlayPosition: Long = 0

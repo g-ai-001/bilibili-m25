@@ -7,7 +7,7 @@ import app.bilibili_m25.data.local.entity.VideoEntity
 
 @Database(
     entities = [VideoEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class BilibiliDatabase : RoomDatabase() {

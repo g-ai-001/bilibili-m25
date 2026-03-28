@@ -31,7 +31,9 @@ object AppModule {
             context,
             BilibiliDatabase::class.java,
             "bilibili_m25.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
